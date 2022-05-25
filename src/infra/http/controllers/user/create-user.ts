@@ -1,4 +1,6 @@
 import { Request, Response } from "express";
+
+import { InvalidFields } from "../../../../modules/user/errors";
 import { CreateUser } from "../../../../modules/user/use-cases/create";
 
 export class CreateUserController {
@@ -8,11 +10,7 @@ export class CreateUserController {
     const { email, password } = request.body;
 
     if (!email || !password) {
-      return response.status(400).json({
-        error: true,
-        message: "invalid fields",
-        code: 400,
-      });
+      throw new InvalidFields();
     }
 
     try {

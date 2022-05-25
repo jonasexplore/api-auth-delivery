@@ -1,4 +1,6 @@
 import { Request, Response } from "express";
+
+import { InvalidFields } from "../../../../modules/user/errors";
 import { ConfirmUserEmail } from "../../../../modules/user/use-cases/confirm-email";
 
 export class ConfirmUserEmailController {
@@ -9,11 +11,7 @@ export class ConfirmUserEmailController {
     const { code } = request.query as { code: string };
 
     if (!email || !code) {
-      return response.status(400).json({
-        error: true,
-        message: "invalid fields",
-        code: 400,
-      });
+      throw new InvalidFields();
     }
 
     try {

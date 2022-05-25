@@ -1,6 +1,6 @@
 import { IAuthenticationProvider } from "../../../infra/providers/authentication/IAuthentication";
 
-export type CreateUserProps = {
+type CreateUserProps = {
   email: string;
   password: string;
 };

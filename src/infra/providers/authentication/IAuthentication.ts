@@ -8,7 +8,17 @@ export type ConfirmUserProps = {
   code: string;
 };
 
+export type UserProps = {
+  email: string;
+  password: string;
+};
+
+export type AuthenticateResponse = {
+  token: string;
+};
+
 export interface IAuthenticationProvider {
   createUser(user: CreateUserProps): Promise<any>;
   confirmUser(user: ConfirmUserProps): Promise<void>;
+  authenticate(user: UserProps): Promise<AuthenticateResponse>;
 }

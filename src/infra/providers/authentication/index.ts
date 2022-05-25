@@ -1,8 +1,14 @@
-import { CognitoUserPool, CognitoUser } from "amazon-cognito-identity-js";
+import {
+  AuthenticationDetails,
+  CognitoUserPool,
+  CognitoUser,
+} from "amazon-cognito-identity-js";
 import {
   CreateUserProps,
   ConfirmUserProps,
   IAuthenticationProvider,
+  AuthenticateResponse,
+  UserProps,
 } from "./IAuthentication";
 
 const POOL_DATA = {
@@ -17,7 +23,6 @@ export class AuthenticationProvider implements IAuthenticationProvider {
     return new Promise((resolve, reject) => {
       this.pool.signUp(email, password, [], [], (err, result) => {
         if (err) {
-          console.log(err);
           return reject(err);
         }
 
@@ -38,19 +43,44 @@ export class AuthenticationProvider implements IAuthenticationProvider {
 
       const user = new CognitoUser(COGNITO_USER);
 
-      if (!user) {
-        return reject(new Error("User not found"));
-      }
-
       user.confirmRegistration(code, true, (err, result) => {
         if (err) {
-          console.log(err);
           return reject(err);
         }
 
         console.log({ result });
 
         return resolve(result);
+      });
+    });
+  }
+
+  async authenticate({
+    email,
+    password,
+  }: UserProps): Promise<AuthenticateResponse> {
+    return new Promise((resolve, reject) => {
+      const COGNITO_USER = {
+        Username: email,
+        Pool: this.pool,
+      };
+
+      const user = new CognitoUser(COGNITO_USER);
+
+      const authenticationDetails = new AuthenticationDetails({
+        Username: email,
+        Password: password,
+      });
+
+      user.authenticateUser(authenticationDetails, {
+        onSuccess: (result) => {
+          return resolve({
+            token: result.getIdToken().getJwtToken(),
+          });
+        },
+        onFailure: (err) => {
+          return reject(err);
+        },
       });
     });
   }

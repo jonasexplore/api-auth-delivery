@@ -27,7 +27,6 @@ export class AuthenticationProvider implements IAuthenticationProvider {
         }
 
         const cognitoUser = result?.user;
-        console.log(cognitoUser);
 
         return resolve({ cognitoUser });
       });
@@ -47,8 +46,6 @@ export class AuthenticationProvider implements IAuthenticationProvider {
         if (err) {
           return reject(err);
         }
-
-        console.log({ result });
 
         return resolve(result);
       });

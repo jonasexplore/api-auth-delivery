@@ -7,14 +7,14 @@ export class ConfirmUserEmailController {
   constructor(private readonly confirmUserEmail: ConfirmUserEmail) {}
 
   async handle(request: Request, response: Response) {
-    const { email } = request.body;
-    const { code } = request.query as { code: string };
-
-    if (!email || !code) {
-      throw new InvalidFields();
-    }
-
     try {
+      const { email } = request.body;
+      const { code } = request.query as { code: string };
+
+      if (!email || !code) {
+        throw new InvalidFields();
+      }
+
       const confirmedUser = await this.confirmUserEmail.handle({ email, code });
       return response.status(200).json(confirmedUser);
     } catch (error) {

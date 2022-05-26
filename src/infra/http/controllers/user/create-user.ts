@@ -7,13 +7,13 @@ export class CreateUserController {
   constructor(private readonly createUser: CreateUser) {}
 
   async handle(request: Request, response: Response) {
-    const { email, password } = request.body;
-
-    if (!email || !password) {
-      throw new InvalidFields();
-    }
-
     try {
+      const { email, password } = request.body;
+
+      if (!email || !password) {
+        throw new InvalidFields();
+      }
+
       return response
         .status(200)
         .json(this.createUser.handle({ email, password }));
